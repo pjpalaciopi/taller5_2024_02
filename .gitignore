@@ -50,3 +50,17 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Modificacion para taller5
+# folders
+.metadata/
+.settings/
+Debug/
+Release/
+*.launch
+
+# Others
+.directory
+*.zip
+CMSIS-Full
+CMSIS-All
