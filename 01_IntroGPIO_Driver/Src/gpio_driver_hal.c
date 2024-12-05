@@ -217,12 +217,19 @@ void gpio_WritePin(GPIO_Handler_t *pGPIOHandler, uint8_t newState){
 uint32_t gpio_ReadPin(GPIO_Handler_t *pGPIOHandler){
 	uint32_t pinValue = 0;
 
+	// limpio lo que hay en el registro salvo la posicion de interes y lo guardo a pinValue
+	pinValue = (pGPIOHandler->pGPIOx->IDR) & (1 << pGPIOHandler->pinConfig.GPIO_PinNumber);
+
 	// cargamos el valor del registro IDR, dezplazando a la derecha tantas veces como el numero de pin especificado
-	pinValue = (pGPIOHandler->pGPIOx->IDR >> pGPIOHandler->pinConfig.GPIO_PinNumber);
+	pinValue = (pinValue >> pGPIOHandler->pinConfig.GPIO_PinNumber);
 
 	return pinValue;
 }
 
 void gpio_TooglePin(GPIO_Handler_t *pGPIOHandler){
 
+	/* ^ es el operador xor, si en ODR hay 1, ambos inputs el xor son 1 y el output = 0,
+	 * Si en ODR hay un 0 el xor da 1
+	 */
+	pGPIOHandler->pGPIOx->ODR ^= (SET << pGPIOHandler->pinConfig.GPIO_PinNumber);
 }
