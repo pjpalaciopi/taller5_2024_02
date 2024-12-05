@@ -199,6 +199,6 @@ typedef struct{
 									  GPIOx == GPIOC) || \
 									  GPIOx == GPIOD) || \
 									  GPIOx == GPIOE) || \
-									  GPIOx == GPIOH) || \)
+									  GPIOx == GPIOH))
 #endif /* STM32F4XX_HAL_H_ */
 

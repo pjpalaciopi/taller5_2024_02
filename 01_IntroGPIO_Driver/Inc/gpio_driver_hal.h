@@ -134,7 +134,19 @@ typedef struct{
 #define IS_GPIO_MODE(MODE)			(((MODE) == GPIO_MODE_IN)		||	\
 									 ((MODE) == GPIO_MODE_OUT		||	\
 									 ((MODE) == GPIO_MODE_ALTFN)	||	\
-									 ((MODE) == GPIO_MODE_ANALOG)))
+									 ((MODE) == GPIO_MODE_ANALOG))
+
+#define IS_GPIO_OUTPUT_TYPE(OUTPUT)	(((OUTPUT) == GPIO_OTYPE_PUSHPULL) || ((OUTPUT) == GPIO_OTYPE_OPENDRAIN))
+
+#define IS_GPIO_OSPEED(SPEED) (((SPEED) == GPIO_OSPEED_LOW)		|| \
+							   ((SPEED) == GPIO_OSPEED_MEDIUM)	|| \
+								(SPEED) == GPIO_OSPEED_FAST)	|| \
+								(SPEED) == GPIO_OSPEED_HIGH))
+
+#define IS_GPIO_PUPDR(PULL)	(((PULL) == GPIO_PUPDR_NOTHING)	|| \
+							  ((PULL) == GPIO_PUPDR_PULLUP)	|| \
+							  ((PULL) == GPIO_PUPDR_PULLDOWN))
+
 
 // header definitions for the "public functions" of gpio_driver_hal
 void gpio_Config(GPIO_Handler_t *pGPIOHandler);
