@@ -85,5 +85,149 @@ void timer_set_prescaler(Timer_Handler_t *pTimerHandler){
 	assert_param(IS_TIMER_PRESC(pTimerHandler->TIMx_Config.TIMx_Prescaler));
 
 	// configuramos el valor del prescaler
-	pTimerHandler->pTIMx->PSC = pTimerHandler->TIMx_Config.TIMx_Prescaler - 1;
+	pTimerHandler->pTIMx->PSC = pTimerHandler->TIMx_Config.TIMx_Prescaler - 1;	//16000000
 }
+
+/*
+ * Esta funcion configura el limite hasta donde cuenta el Timer para generar
+ * un evento "update" (cuando esta contando de forma ascendente,) o configura
+ * el valor desde donde se comienza a contar cuando el sistema funciona de
+ * forma descendente
+ */
+void timer_set_period(Timer_Handler_t *pTimerHandler){
+	// verificamos que el valor que genera el periodo es valido
+	assert_param(IS_TIMER_PERIOD(pTimerHandler->TIMx_Config.TIMx_Period));
+
+	//FALTA
+
+	// configuramos el valor del auto-reload
+	pTimerHandler->pTIMx->ARR = pTimerHandler->TIMx_Config.TIMx_Period - 1;
+}
+
+/*
+ * Upcounter or Downcounter
+ */
+void timer_set_mode(Timer_Handler_t *pTimerHandler){
+	// verificamos que el modo de funcionamiento es correcto
+	assert_param(IS_TIMER_MODE(pTimerHandler->TIMx_Config.TIMx_mode));
+
+	// verificamos cual es el modo que se desea configurar
+	if (pTimerHandler->TIMx_Config.TIMx_mode == TIMER_UP_COUNTER){
+		// ponemos modo Upcounter = 0
+		pTimerHandler->pTIMx->CR1 &= ~TIM_CR1_DIR;
+	}
+	else{
+		// ponemos modo Downcounter = 1
+		pTimerHandler->pTIMx->CR1 |= TIM_CR1_DIR;
+	}
+}
+
+void timer_config_interrupt(Timer_Handler_t *pTimerHandler){
+	// verificamos el valor
+	assert_param(IS_TIMER_INTERRUPT(pTimerHandler->TIMx_Config.TIMx_InterruptEnable));
+
+	if (pTimerHandler->TIMx_Config.TIMx_InterruptEnable == TIMER_INT_ENABLE){
+		// activamos la interrupcion debido al Timerx utilizado
+		pTimerHandler->pTIMx->DIER |= TIM_DIER_UIE;
+
+		// activamos el canal del sistema NVIC para que lea la interrupcion
+		if (pTimerHandler->pTIMx == TIM2){
+			NVIC_EnableIRQ(TIM2_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM3){
+			NVIC_EnableIRQ(TIM3_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM4){
+			NVIC_EnableIRQ(TIM4_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM5){
+			NVIC_EnableIRQ(TIM5_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM9){
+			NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM10){
+			NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM11){
+			NVIC_EnableIRQ(TIM1_TRG_COM_TIM11_IRQn);
+		}
+		else{
+			__NOP();
+		}
+	}
+	else{
+		// desactivamos la interrupcion devida al Timerx  utilizando
+		pTimerHandler->pTIMx->DIER &= ~TIM_DIER_UIE;
+
+		// desactivamos el canal del sistema NVIC para que lea la interrupcion
+		if (pTimerHandler->pTIMx == TIM2){
+			NVIC_DisableIRQ(TIM2_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM3){
+			NVIC_DisableIRQ(TIM3_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM4){
+			NVIC_DisableIRQ(TIM4_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM5){
+			NVIC_DisableIRQ(TIM5_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM9){
+			NVIC_DisableIRQ(TIM1_BRK_TIM9_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM10){
+			NVIC_DisableIRQ(TIM1_UP_TIM10_IRQn);
+		}
+		else if (pTimerHandler->pTIMx == TIM11){
+			NVIC_DisbleIRQ(TIM1_TRG_COM_TIM11_IRQn);
+		}
+		else{
+			__NOP();
+		}
+	}
+}
+
+void timer_SetState(Timer_Handler_t *pTimerHandler, uint8_t newState){
+	// verificamos que el parametro ingresado sea valido
+	assert_param(IS_TIMER_STATE(newState));
+
+	// 4. reiniciamos el registro counter
+	pTimerHandler->pTIMx->CNT = 0;
+
+	if (newState == TIMER_ON){
+		//5.a Activamos el Timer (el CNT debe comentar a contar)
+		pTimerHandler->pTIMx->CNT |= TIM_CR1_CEN;
+	}
+	else{
+		//5.b desactivamos el Timer (el CTN debe detenerse)
+		pTimerHandler->pTIMx->CNT &= ~TIM_CR1_CEN;
+	}
+}
+
+
+__attribute__((weak)) void Timer2_Callback(void){
+	__NOP();
+}
+
+void TIM2_IRQHandler(void){
+	// limpiamos la bandera
+	TIM2->SR &= ~TIM_SR_UIF;
+
+	//llamamos a la funcion que se debe encargar de hacer algo con esta interrupcion
+	Timer2_Callback();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
