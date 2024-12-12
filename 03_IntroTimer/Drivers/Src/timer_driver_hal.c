@@ -85,7 +85,7 @@ void timer_set_prescaler(Timer_Handler_t *pTimerHandler){
 	assert_param(IS_TIMER_PRESC(pTimerHandler->TIMx_Config.TIMx_Prescaler));
 
 	// configuramos el valor del prescaler
-	pTimerHandler->pTIMx->PSC = pTimerHandler->TIMx_Config.TIMx_Prescaler - 1;	//16000000
+	pTimerHandler->pTIMx->PSC = pTimerHandler->TIMx_Config.TIMx_Prescaler - 1;	//160000000
 }
 
 /*
@@ -180,7 +180,7 @@ void timer_config_interrupt(Timer_Handler_t *pTimerHandler){
 			NVIC_DisableIRQ(TIM1_UP_TIM10_IRQn);
 		}
 		else if (pTimerHandler->pTIMx == TIM11){
-			NVIC_DisbleIRQ(TIM1_TRG_COM_TIM11_IRQn);
+			NVIC_DisableIRQ(TIM1_TRG_COM_TIM11_IRQn);
 		}
 		else{
 			__NOP();
@@ -210,6 +210,30 @@ __attribute__((weak)) void Timer2_Callback(void){
 	__NOP();
 }
 
+__attribute__((weak)) void Timer3_Callback(void){
+	__NOP();
+}
+
+__attribute__((weak)) void Timer4_Callback(void){
+	__NOP();
+}
+
+__attribute__((weak)) void Timer5_Callback(void){
+	__NOP();
+}
+
+__attribute__((weak)) void Timer9_Callback(void){
+	__NOP();
+}
+
+__attribute__((weak)) void Timer10_Callback(void){
+	__NOP();
+}
+
+__attribute__((weak)) void Timer11_Callback(void){
+	__NOP();
+}
+
 void TIM2_IRQHandler(void){
 	// limpiamos la bandera
 	TIM2->SR &= ~TIM_SR_UIF;
@@ -218,10 +242,53 @@ void TIM2_IRQHandler(void){
 	Timer2_Callback();
 }
 
+void TIM3_IRQHandler(void){
+	// limpiamos la bandera
+	TIM3->SR &= ~TIM_SR_UIF;
 
+	//llamamos a la funcion que se debe encargar de hacer algo con esta interrupcion
+	Timer3_Callback();
+}
 
+void TIM4_IRQHandler(void){
+	// limpiamos la bandera
+	TIM4->SR &= ~TIM_SR_UIF;
 
+	//llamamos a la funcion que se debe encargar de hacer algo con esta interrupcion
+	Timer4_Callback();
+}
 
+void TIM5_IRQHandler(void){
+	// limpiamos la bandera
+	TIM5->SR &= ~TIM_SR_UIF;
+
+	//llamamos a la funcion que se debe encargar de hacer algo con esta interrupcion
+	Timer5_Callback();
+}
+
+void TIM9_IRQHandler(void){
+	// limpiamos la bandera
+	TIM9->SR &= ~TIM_SR_UIF;
+
+	//llamamos a la funcion que se debe encargar de hacer algo con esta interrupcion
+	Timer9_Callback();
+}
+
+void TIM10_IRQHandler(void){
+	// limpiamos la bandera
+	TIM10->SR &= ~TIM_SR_UIF;
+
+	//llamamos a la funcion que se debe encargar de hacer algo con esta interrupcion
+	Timer10_Callback();
+}
+
+void TIM11_IRQHandler(void){
+	// limpiamos la bandera
+	TIM4->SR &= ~TIM_SR_UIF;
+
+	//llamamos a la funcion que se debe encargar de hacer algo con esta interrupcion
+	Timer11_Callback();
+}
 
 
 

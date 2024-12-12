@@ -57,6 +57,12 @@ void timer_Config(Timer_Handler_t *pTimerHandler);
 void timer_SetState(Timer_Handler_t *TimerHandler, uint8_t newState);
 
 // esta funcion debe ser sobre-escrita en el main para que el sistema funcione
-void timer2_Callback(void);
+void Timer2_Callback(void);
+void Timer3_Callback(void);
+void Timer4_Callback(void);
+void Timer5_Callback(void);
+void Timer9_Callback(void);
+void Timer10_Callback(void);
+void Timer11_Callback(void);
 
 #endif /* INC_TIMER_DRIVER_HAL_H_ */
